@@ -1,0 +1,173 @@
+import { rgb2hsl, hsl2rgb, hex2rgb, rgb2hex } from '@/transforms';
+
+const colorRegex = /^#([A-Fa-f\d]{3}|[A-Fa-f\d]{6})$/;
+
+function isValid(hex) {
+    return colorRegex.test(hex);
+}
+
+function processChannel(channel, sign, factor = 30) {
+    factor = Math.max(0, Math.min(100, factor));
+    if (factor === 0) {
+        return this;
+    }
+    this._hsl[channel] = Math.min(100, this._hsl[channel] * (1 + sign * factor / 100));
+    return this;
+}
+
+function toNanocolor(value) {
+    return value instanceof Nanocolor ? value : new Nanocolor(value); // eslint-disable-line
+}
+
+
+class Nanocolor {
+    constructor(hexOrInstance) {
+        if (hexOrInstance instanceof Nanocolor) {
+            this._hsl = Object.assign({ }, hexOrInstance._hsl);
+        }
+        else {
+            if (!isValid(hexOrInstance)) {
+                hexOrInstance = '#000';
+            }
+            this._hsl = rgb2hsl(hex2rgb(hexOrInstance));
+        }
+    }
+
+    grayscale() {
+        this._hsl.s = 0;
+        return this;
+    }
+
+    invert() {
+        const rgb = hsl2rgb(this._hsl);
+        rgb.r = 255 - rgb.r;
+        rgb.g = 255 - rgb.g;
+        rgb.b = 255 - rgb.b;
+        this._hsl = rgb2hsl(rgb);
+        return this;
+    }
+
+    darken(factor) {
+        return processChannel.call(this, 'l', -1, factor);
+    }
+
+    lighten(factor) {
+        return processChannel.call(this, 'l', 1, factor);
+    }
+
+    saturate(factor) {
+        return processChannel.call(this, 's', 1, factor);
+    }
+
+    desaturate(factor) {
+        return processChannel.call(this, 's', -1, factor);
+    }
+
+    shift(amount) {
+        this._hsl.h = (this._hsl.h + amount) % 360;
+        if (this._hsl.h < 0) {
+            this._hsl.h += 360;
+        }
+        return this;
+    }
+
+    isDark() {
+        return this._hsl.l < 50;
+    }
+
+    isLight() {
+        return !this.isDark();
+    }
+
+    getHSL() {
+        const hsl = this._hsl;
+        return { h: Math.round(hsl.h), s: Math.round(hsl.s), l: Math.round(hsl.l) };
+    }
+
+    getRGB() {
+        const rgb = hsl2rgb(this._hsl);
+        return { r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b) };
+    }
+
+    equals(other) {
+        if (typeof other === 'string') {
+            other = new Nanocolor(other);
+        }
+        if (other instanceof Nanocolor) {
+            return this.toString() === other.toString();
+        }
+        return false;
+    }
+
+    compare(other) {
+        other = toNanocolor(other);
+        if (this.equals(other)) {
+            return 0;
+        }
+        const makeComparable = hsl => hsl.h * 1e6 + hsl.l * 1e3 + hsl.s;
+        return Math.sign(makeComparable(this.getHSL()) - makeComparable(other.getHSL()));
+    }
+
+    clone() {
+        return new Nanocolor(this.toString());
+    }
+
+    toString() {
+        return rgb2hex(this.getRGB());
+    }
+
+    valueOf() {
+        return this.toString();
+    }
+}
+
+function factory(hex) {
+    return new Nanocolor(hex);
+}
+
+factory.random = function(hue = null){
+    if (hue === null) {
+        const randomHex = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        return new Nanocolor(randomHex);
+    }
+
+    const randomChannel = () => Math.floor(Math.random() * 101);
+    const hsl = {
+        h: Math.min(360, Math.max(0, hue)),
+        s: randomChannel(),
+        l: randomChannel()
+    };
+    return new Nanocolor(rgb2hex(hsl2rgb(hsl)));
+};
+
+factory.gradient = function(from, to, steps = 2){
+    from = toNanocolor(from);
+    to = toNanocolor(to);
+    steps = Math.max(2, steps);
+    
+    const stepsPerChannel = {
+        h: (to._hsl.h - from._hsl.h) / steps,
+        s: (to._hsl.s - from._hsl.s) / steps,
+        l: (to._hsl.l - from._hsl.l) / steps
+    };
+
+    const result = [from];
+    for (let i = 1; i < steps - 1; ++i) {
+        const entry = from.clone();
+        Object.keys(stepsPerChannel).forEach(channel => {
+            entry._hsl[channel] = from._hsl[channel] + Math.round(i * stepsPerChannel[channel]);
+        });
+        result.push(entry);
+    }
+    result.push(to);
+    return result;
+};
+
+factory.sort = function(array){
+    array = array.map(toNanocolor);
+    return array.sort((a, b) => a.compare(b));
+};
+
+factory.isValid = isValid;
+
+export default factory;

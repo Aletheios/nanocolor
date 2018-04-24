@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>nanocolor Demo</title>
+        <meta charset="utf-8">
+
+        <style>
+            html, body { font-family: monospace; margin: 25px; }
+            h2 { margin-top: 40px; }
+            .block { margin-bottom: 20px; }
+            .color { width: 70px; height: 70px; display: inline-block; margin-right: 10px; padding: 10px; font-weight: bold; }
+        </style>
+    </head>
+
+    <body>
+        <h1>nanocolor Demo</h1>
+        <div id="demo"></div>
+
+        <script src="../dist/nanocolor.js"></script>
+
+        <script>
+            // Ignore this, it only renders things for the demo
+            function renderDemo(title, colors) {
+                var demo = document.getElementById('demo');
+                if (title) {
+                    demo.innerHTML += '<h2>' + title + '</h2>';
+                }
+                demo.innerHTML += '<div class="block">' + colors.map(function(color){
+                    return '<div class="color" style="background: ' + color + ';">' + color + '</div>';
+                }).join('') + '</div>';
+            }
+        </script>
+
+        <script>
+            renderDemo('grayscale()', [
+                '#ff9900',
+                nanocolor('#ff9900').grayscale()
+            ]);
+
+            renderDemo('invert()', [
+                '#ff9900',
+                nanocolor('#ff9900').invert()
+            ]);
+
+            renderDemo('darken()', [
+                '#ff9900',
+                nanocolor('#ff9900').darken(),
+                nanocolor('#ff9900').darken().darken()
+            ]);
+
+            renderDemo('lighten()', [
+                '#ff9900',
+                nanocolor('#ff9900').lighten(),
+                nanocolor('#ff9900').lighten().lighten()
+            ]);
+
+            renderDemo('shift(amount)', [
+                '#ff9900',
+                nanocolor('#ff9900').shift(100)
+            ]);
+
+            renderDemo('Chaining: lighten().shift().desaturate()', [
+                '#ff9900',
+                nanocolor('#ff9900').lighten(50).shift(150).desaturate()
+            ]);
+
+            renderDemo('nanocolor.random()', [nanocolor.random()]);
+            renderDemo('nanocolor.random(hue)', [nanocolor.random(100)]);
+
+            renderDemo('nanocolor.gradient()', nanocolor.gradient('#c00', '#00c', 10));
+            renderDemo('', nanocolor.gradient('#000', '#fff', 5));
+
+            renderDemo('nanocolor.sort()', nanocolor.sort(['#0c0', '#0ff', '#c00', '#f0c', '#c0f', '#00f', '#cf0', '#fc0']));
+        </script>
+    </body>
+</html>
