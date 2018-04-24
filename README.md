@@ -53,13 +53,14 @@ The `nanocolor` constructor can be called with hex color strings or other nanoco
 ### Instance Methods
 
 #### Chainable Methods
-* `instance.grayscale()`: Transforms the color to grayscale. Chainable, i.e. returns `instance`.
-* `instance.invert()`: Inverts the color. Chainable, i.e. returns `instance`.
-* `instance.darken(factor = 30)`: Darkens the color. Factor is optional (0 <= `factor` <= 100). Chainable, i.e. returns `instance`.
-* `instance.lighten(factor = 30)`: Lightens the color. Factor is optional (0 <= `factor` <= 100). Chainable, i.e. returns `instance`.
-* `instance.saturate(factor = 30)`: Saturates the color. Factor is optional (0 <= `factor` <= 100). Chainable, i.e. returns `instance`.
-* `instance.desaturate(factor = 30)`: Desaturates the color. Factor is optional (0 <= `factor` <= 100). Chainable, i.e. returns `instance`.
-* `instance.shift(amount)`: Shifts the HSL hue of the color by the given amount, e.g. from red to green. Amount is an integer usually in the range -360 <= `amount` <= 360. Chainable, i.e. returns `instance`.
+These methods can be chained (i.e. they return the nanocolor instance). For example: `instance.lighten().saturate()`
+* `instance.grayscale()`: Transforms the color to grayscale.
+* `instance.invert()`: Inverts the color.
+* `instance.darken(factor = 30)`: Darkens the color. Factor is optional (0 <= `factor` <= 100).
+* `instance.lighten(factor = 30)`: Lightens the color. Factor is optional (0 <= `factor` <= 100).
+* `instance.saturate(factor = 30)`: Saturates the color. Factor is optional (0 <= `factor` <= 100).
+* `instance.desaturate(factor = 30)`: Desaturates the color. Factor is optional (0 <= `factor` <= 100).
+* `instance.shift(amount)`: Shifts the HSL hue of the color by the given amount, e.g. from red to green. Amount is an integer usually in the range -360 <= `amount` <= 360.
 
 #### Other Methods
 * `instance.isDark()`: Returns a boolean whether or not the color is considered dark.
