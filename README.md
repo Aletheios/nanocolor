@@ -16,13 +16,13 @@ Dependency-free. Internally works with HSL colors. Inspired by various other col
 Install `nanocolor` via npm:
 
 ```bash
-npm install --save nanocolor
+npm install --save nanocolor-hsl
 ```
 
 Then import it in your project:
 
 ```javascript
-import nanocolor from 'nanocolor';
+import nanocolor from 'nanocolor-hsl';
 ```
 
 Or include the files via `<script>` tag:
