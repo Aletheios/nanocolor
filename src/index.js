@@ -21,7 +21,7 @@ function toNanocolor(value) {
 
 
 class Nanocolor {
-    constructor(hexOrInstance) {
+    constructor(hexOrInstance = '') {
         if (hexOrInstance instanceof Nanocolor) {
             this._hsl = Object.assign({ }, hexOrInstance._hsl);
         }
@@ -132,12 +132,13 @@ factory.random = function(hue = null){
     }
 
     const randomChannel = () => Math.floor(Math.random() * 101);
-    const hsl = {
+    const color = new Nanocolor();
+    color._hsl = {
         h: Math.min(360, Math.max(0, hue)),
         s: randomChannel(),
         l: randomChannel()
     };
-    return new Nanocolor(rgb2hex(hsl2rgb(hsl)));
+    return color;
 };
 
 factory.gradient = function(from, to, steps = 2){
@@ -152,13 +153,16 @@ factory.gradient = function(from, to, steps = 2){
     };
 
     const result = [from];
+    const getChannelValue = (channel, i) => from._hsl[channel] + Math.round(i * stepsPerChannel[channel]);
+
     for (let i = 1; i < steps - 1; ++i) {
         const entry = from.clone();
-        Object.keys(stepsPerChannel).forEach(channel => {
-            entry._hsl[channel] = from._hsl[channel] + Math.round(i * stepsPerChannel[channel]);
-        });
+        entry._hsl.h = getChannelValue('h', i);
+        entry._hsl.s = getChannelValue('s', i);
+        entry._hsl.l = getChannelValue('l', i);
         result.push(entry);
     }
+
     result.push(to);
     return result;
 };

@@ -119,7 +119,9 @@ function toNanocolor(value) {
 }
 
 var Nanocolor = function () {
-    function Nanocolor(hexOrInstance) {
+    function Nanocolor() {
+        var hexOrInstance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
         _classCallCheck(this, Nanocolor);
 
         if (hexOrInstance instanceof Nanocolor) {
@@ -257,12 +259,13 @@ factory.random = function () {
     var randomChannel = function randomChannel() {
         return Math.floor(Math.random() * 101);
     };
-    var hsl = {
+    var color = new Nanocolor();
+    color._hsl = {
         h: Math.min(360, Math.max(0, hue)),
         s: randomChannel(),
         l: randomChannel()
     };
-    return new Nanocolor((0, _transforms.rgb2hex)((0, _transforms.hsl2rgb)(hsl)));
+    return color;
 };
 
 factory.gradient = function (from, to) {
@@ -279,18 +282,18 @@ factory.gradient = function (from, to) {
     };
 
     var result = [from];
-
-    var _loop = function _loop(i) {
-        var entry = from.clone();
-        Object.keys(stepsPerChannel).forEach(function (channel) {
-            entry._hsl[channel] = from._hsl[channel] + Math.round(i * stepsPerChannel[channel]);
-        });
-        result.push(entry);
+    var getChannelValue = function getChannelValue(channel, i) {
+        return from._hsl[channel] + Math.round(i * stepsPerChannel[channel]);
     };
 
     for (var i = 1; i < steps - 1; ++i) {
-        _loop(i);
+        var entry = from.clone();
+        entry._hsl.h = getChannelValue('h', i);
+        entry._hsl.s = getChannelValue('s', i);
+        entry._hsl.l = getChannelValue('l', i);
+        result.push(entry);
     }
+
     result.push(to);
     return result;
 };
