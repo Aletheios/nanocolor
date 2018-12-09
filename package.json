@@ -1,8 +1,13 @@
 {
     "name": "nanocolor-hsl",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Minimalistic and tiny color manipulation library",
-    "keywords": ["color", "parser", "rgb", "hsl"],
+    "keywords": [
+        "color",
+        "parser",
+        "rgb",
+        "hsl"
+    ],
     "author": "Simon Ismair",
     "license": "MIT",
     "repository": {
@@ -14,26 +19,23 @@
         "build": "webpack --env dev && webpack --env build",
         "dev": "webpack --progress --colors --watch --env dev",
         "lint": "eslint --ext js ./*.js",
-        "test": "karma start test/karma.conf.js"
+        "test": "jest --config=test/jest.config.js"
     },
     "devDependencies": {
         "babel-cli": "6.26.0",
-        "babel-core": "6.26.0",
+        "babel-core": "6.26.3",
         "babel-eslint": "8.0.3",
+        "babel-jest": "23.6.0",
         "babel-loader": "7.1.2",
         "babel-plugin-add-module-exports": "0.2.1",
         "babel-preset-env": "1.6.1",
-        "eslint": "4.18.0",
-        "eslint-loader": "1.9.0",
-        "jasmine-core": "2.7.0",
-        "jsdom": "11.1.0",
-        "karma": "1.7.0",
-        "karma-jasmine": "1.1.0",
-        "karma-jsdom-launcher": "6.1.2",
-        "karma-mocha-reporter": "2.2.3",
-        "karma-sourcemap-loader": "0.3.7",
-        "karma-webpack": "2.0.4",
-        "webpack": "3.10.0",
-        "yargs": "10.0.3"
+        "eslint": "5.10.0",
+        "eslint-loader": "2.1.1",
+        "jest": "23.6.0",
+        "terser": "3.11.0",
+        "terser-webpack-plugin": "1.1.0",
+        "webpack": "4.27.1",
+        "webpack-cli": "3.1.2",
+        "yargs": "12.0.5"
     }
 }
