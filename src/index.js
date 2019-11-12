@@ -99,7 +99,7 @@ class Nanocolor {
     }
 
     get isDark() {
-        return this.grayscale()._hsl.l < 40;
+        return this.grayscale()._hsl.l < 50;
     }
 
     get isLight() {
