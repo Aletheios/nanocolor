@@ -185,7 +185,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     _createClass(Nanocolor, [{
       key: "grayscale",
       value: function grayscale() {
-        this._hsl.s = 0;
+        var perceived = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+        if (perceived) {
+          var rgb = this.rgb;
+          var gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
+          this._hsl = (0, _transforms.rgb2hsl)({
+            r: gray,
+            g: gray,
+            b: gray
+          });
+        } else {
+          this._hsl.s = 0;
+        }
+
         return this;
       }
     }, {
@@ -310,7 +323,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }, {
       key: "isDark",
       get: function get() {
-        return this._hsl.l < 50;
+        return this.grayscale()._hsl.l < 40;
       }
     }, {
       key: "isLight",

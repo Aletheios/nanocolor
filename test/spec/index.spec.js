@@ -10,13 +10,15 @@ describe('nanocolor', () => {
 
     describe('(chainable methods)', () => {
         it('should convert a color to grayscale', () => {
-            expect(nanocolor('#ff9900').grayscale().hex).toEqual('#808080');
-            expect(nanocolor('#f00').grayscale().hex).toEqual('#808080');
-            expect(nanocolor('#123456').grayscale().hex).toEqual('#343434');
-
+            expect(nanocolor('#ff9900').grayscale().hex).toEqual('#a6a6a6');
+            expect(nanocolor('#f00').grayscale().hex).toEqual('#4c4c4c');
+            expect(nanocolor('#123456').grayscale().hex).toEqual('#2e2e2e');
             expect(nanocolor('#fff').grayscale().hex).toEqual('#ffffff');
-            expect(nanocolor('#000').grayscale().hex).toEqual('#000000');
-            expect(nanocolor('#ccc').grayscale().hex).toEqual('#cccccc');
+
+            expect(nanocolor('#ff9900').grayscale(false).hex).toEqual('#808080');
+            expect(nanocolor('#f00').grayscale(false).hex).toEqual('#808080');
+            expect(nanocolor('#123456').grayscale(false).hex).toEqual('#343434');
+            expect(nanocolor('#fff').grayscale(false).hex).toEqual('#ffffff');
         });
 
         it('should invert a color', () => {

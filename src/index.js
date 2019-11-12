@@ -41,8 +41,15 @@ class Nanocolor {
         }
     }
 
-    grayscale() {
-        this._hsl.s = 0;
+    grayscale(perceived = true) {
+        if (perceived) {
+            const rgb = this.rgb;
+            const gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
+            this._hsl = rgb2hsl({ r: gray, g: gray, b: gray });
+        }
+        else {
+            this._hsl.s = 0;
+        }
         return this;
     }
 
@@ -92,7 +99,7 @@ class Nanocolor {
     }
 
     get isDark() {
-        return this._hsl.l < 50;
+        return this.grayscale()._hsl.l < 40;
     }
 
     get isLight() {

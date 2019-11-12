@@ -2,7 +2,7 @@
 
 **Minimalistic and tiny color manipulation library**
 
-Dependency-free. Only 4.8KB (1.9KB gzipped). Internally works with HSL colors. Inspired by various other color libraries.
+Dependency-free. Only 2.65 KB (minified + gzipped). Internally works with HSL colors. Inspired by various other color libraries.
 
 ## Table of Contents
 
@@ -62,7 +62,7 @@ The `nanocolor` constructor can be called with hex color strings, RGB values or 
 
 #### Chainable Methods
 These methods can be chained (i.e. they return the nanocolor instance). For example: `instance.lighten().saturate()`
-* `instance.grayscale()`: Transforms the color to grayscale.
+* `instance.grayscale(perceived = true)`: Transforms the color to grayscale. Only sets saturation to zero if `perceived` is `false`.
 * `instance.invert()`: Inverts the color.
 * `instance.darken(factor = 30)`: Darkens the color. Factor is optional (0 <= `factor` <= 100).
 * `instance.lighten(factor = 30)`: Lightens the color. Factor is optional (0 <= `factor` <= 100).
