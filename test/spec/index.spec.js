@@ -77,6 +77,12 @@ describe('nanocolor', () => {
             expect(nanocolor('#f00').shift(460).hex).toEqual('#55ff00');
         });
 
+        it('should mix two colors', () => {
+            expect(nanocolor('#ff9900').mix('#ff0000').hex).toEqual('#ff4d00');
+            expect(nanocolor('#000').mix('#fff').hex).toEqual('#808080');
+            expect(nanocolor('#000').mix('#fff', 25).hex).toEqual('#404040');
+        });
+
         it('should chain functions', () => {
             expect(nanocolor('#ff9900').lighten(50).shift(150).desaturate().hex).toEqual('#93e3ec');
         });

@@ -69,6 +69,7 @@ These methods can be chained (i.e. they return the nanocolor instance). For exam
 * `instance.saturate(factor = 30)`: Saturates the color. Factor is optional (0 <= `factor` <= 100).
 * `instance.desaturate(factor = 30)`: Desaturates the color. Factor is optional (0 <= `factor` <= 100).
 * `instance.shift(amount)`: Shifts the HSL hue of the color by the given amount, e.g. from red to green. Amount is an integer usually in the range -360 <= `amount` <= 360.
+* `instance.mix(color, opacity = 50)`: Mixes the current color with the given color. The new color is applied with the given opacity i.e. percentage (0 <= `opacity` <= 100).
 
 #### Other Methods
 * `instance.equals(color)`: Returns a boolean whether or not the color equals the given `color`. `color` can be a hex color string or a `nanocolor` instance.

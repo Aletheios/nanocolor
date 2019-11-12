@@ -120,6 +120,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   });
   _exports.default = void 0;
 
+  function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+  function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+  function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -130,6 +136,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   function isValid(hex) {
     return colorRegex.test(hex);
+  }
+
+  function isDefined(value) {
+    return typeof value !== 'undefined';
   }
 
   function processChannel(channel, sign) {
@@ -151,19 +161,24 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   var Nanocolor =
   /*#__PURE__*/
   function () {
-    function Nanocolor() {
-      var hexOrInstance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
+    function Nanocolor(hexOrInstanceOrR, g, b) {
       _classCallCheck(this, Nanocolor);
 
-      if (hexOrInstance instanceof Nanocolor) {
-        this._hsl = Object.assign({}, hexOrInstance._hsl);
+      if (hexOrInstanceOrR instanceof Nanocolor) {
+        this._hsl = Object.assign({}, hexOrInstanceOrR._hsl);
+      } else if (isDefined(hexOrInstanceOrR) && isDefined(g) && isDefined(b)) {
+        var rgb = {
+          r: hexOrInstanceOrR,
+          g: g,
+          b: b
+        };
+        this._hsl = (0, _transforms.rgb2hsl)(rgb);
       } else {
-        if (!isValid(hexOrInstance)) {
-          hexOrInstance = '#000';
+        if (!isValid(hexOrInstanceOrR)) {
+          hexOrInstanceOrR = '#000';
         }
 
-        this._hsl = (0, _transforms.rgb2hsl)((0, _transforms.hex2rgb)(hexOrInstance));
+        this._hsl = (0, _transforms.rgb2hsl)((0, _transforms.hex2rgb)(hexOrInstanceOrR));
       }
     }
 
@@ -215,34 +230,34 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return this;
       }
     }, {
-      key: "isDark",
-      value: function isDark() {
-        return this._hsl.l < 50;
-      }
-    }, {
-      key: "isLight",
-      value: function isLight() {
-        return !this.isDark();
-      }
-    }, {
-      key: "getHSL",
-      value: function getHSL() {
-        var hsl = this._hsl;
-        return {
-          h: Math.round(hsl.h),
-          s: Math.round(hsl.s),
-          l: Math.round(hsl.l)
+      key: "mix",
+      value: function mix(otherColor) {
+        var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 50;
+        var otherRGB = new Nanocolor(otherColor).rgb;
+        var thisRGB = this.rgb;
+
+        var mix = function mix(a, b) {
+          return Math.round(a * opacity / 100 + b * (100 - opacity) / 100);
         };
+
+        this._hsl = (0, _transforms.rgb2hsl)({
+          r: mix(otherRGB.r, thisRGB.r),
+          g: mix(otherRGB.g, thisRGB.g),
+          b: mix(otherRGB.b, thisRGB.b)
+        });
+        return this;
       }
     }, {
-      key: "getRGB",
-      value: function getRGB() {
-        var rgb = (0, _transforms.hsl2rgb)(this._hsl);
-        return {
-          r: Math.round(rgb.r),
-          g: Math.round(rgb.g),
-          b: Math.round(rgb.b)
-        };
+      key: "format",
+      value: function format() {
+        var opacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+        var rgb = this.rgb;
+
+        if (isDefined(opacity)) {
+          return "rgba(".concat(rgb.r, ", ").concat(rgb.g, ", ").concat(rgb.b, ", ").concat(opacity, ")");
+        }
+
+        return "rgb(".concat(rgb.r, ", ").concat(rgb.g, ", ").concat(rgb.b, ")");
       }
     }, {
       key: "equals",
@@ -270,30 +285,74 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return hsl.h * 1e6 + hsl.l * 1e3 + hsl.s;
         };
 
-        return Math.sign(makeComparable(this.getHSL()) - makeComparable(other.getHSL()));
+        return Math.sign(makeComparable(this.hsl) - makeComparable(other.hsl));
       }
     }, {
       key: "clone",
       value: function clone() {
-        return new Nanocolor(this.toString());
+        return new Nanocolor(this.hex);
       }
     }, {
       key: "toString",
       value: function toString() {
-        return (0, _transforms.rgb2hex)(this.getRGB());
+        return this.hex;
+      }
+    }, {
+      key: "toJSON",
+      value: function toJSON() {
+        return this.toString();
       }
     }, {
       key: "valueOf",
       value: function valueOf() {
-        return this.toString();
+        return this.hex;
+      }
+    }, {
+      key: "isDark",
+      get: function get() {
+        return this._hsl.l < 50;
+      }
+    }, {
+      key: "isLight",
+      get: function get() {
+        return !this.isDark;
+      }
+    }, {
+      key: "hsl",
+      get: function get() {
+        var hsl = this._hsl;
+        return {
+          h: Math.round(hsl.h),
+          s: Math.round(hsl.s),
+          l: Math.round(hsl.l)
+        };
+      }
+    }, {
+      key: "rgb",
+      get: function get() {
+        var rgb = (0, _transforms.hsl2rgb)(this._hsl);
+        return {
+          r: Math.round(rgb.r),
+          g: Math.round(rgb.g),
+          b: Math.round(rgb.b)
+        };
+      }
+    }, {
+      key: "hex",
+      get: function get() {
+        return (0, _transforms.rgb2hex)(this.rgb);
       }
     }]);
 
     return Nanocolor;
   }();
 
-  function factory(hex) {
-    return new Nanocolor(hex);
+  function factory() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _construct(Nanocolor, args);
   }
 
   factory.random = function () {

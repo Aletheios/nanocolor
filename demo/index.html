@@ -26,7 +26,8 @@
                     demo.innerHTML += '<h2>' + title + '</h2>';
                 }
                 demo.innerHTML += '<div class="block">' + colors.map(function(color){
-                    return '<div class="color" style="background: ' + color + ';">' + color + '</div>';
+                    var textColor = nanocolor(color).isLight ? '#000' : '#fff';
+                    return '<div class="color" style="background: ' + color + '; color: ' + textColor + '">' + color + '</div>';
                 }).join('') + '</div>';
             }
         </script>
@@ -57,6 +58,18 @@
             renderDemo('shift(amount)', [
                 '#ff9900',
                 nanocolor('#ff9900').shift(100)
+            ]);
+
+            renderDemo('mix(other)', [
+                '#ff9900',
+                '#ff0000',
+                nanocolor('#ff9900').mix('#ff0000')
+            ]);
+
+            renderDemo('mix(other, opacity)', [
+                '#ff9900',
+                '#0000ff',
+                nanocolor('#ff9900').mix('#0000ff', 42)
             ]);
 
             renderDemo('Chaining: lighten().shift().desaturate()', [

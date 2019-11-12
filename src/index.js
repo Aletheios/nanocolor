@@ -79,6 +79,18 @@ class Nanocolor {
         return this;
     }
 
+    mix(otherColor, opacity = 50) {
+        const otherRGB = new Nanocolor(otherColor).rgb;
+        const thisRGB = this.rgb;
+        const mix = (a, b) => Math.round(a * opacity / 100 + b * (100 - opacity) / 100);
+        this._hsl = rgb2hsl({
+            r: mix(otherRGB.r, thisRGB.r),
+            g: mix(otherRGB.g, thisRGB.g),
+            b: mix(otherRGB.b, thisRGB.b)
+        });
+        return this;
+    }
+
     get isDark() {
         return this._hsl.l < 50;
     }
