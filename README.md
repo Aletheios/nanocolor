@@ -74,6 +74,7 @@ These methods can be chained (i.e. they return the nanocolor instance). For exam
 * `instance.equals(color)`: Returns a boolean whether or not the color equals the given `color`. `color` can be a hex color string or a `nanocolor` instance.
 * `instance.compare(color)`: Compares the given `color` (hex string or nanocolor instance) to the current `instance`. Returns `0` if the colors are equal, and `-1` or `1` otherwise. Hue is compared first, then lightness, and then saturation. Also see `nanocolor.sort(array)`.
 * `instance.clone()`: Returns a clone of the current `instance`.
+* `instance.format(opacity)`: Returns a string representation for CSS, e.g. `rgb(1, 2, 3)` or, when opacity is given, `rgba(1, 2, 3, 0.42)`.
 
 ### Static Methods
 

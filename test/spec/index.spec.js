@@ -143,6 +143,11 @@ describe('nanocolor', () => {
             expect(color1).not.toBe(color2);
         });
 
+        it('should format a color for CSS', () => {
+            expect(nanocolor('#123456').format()).toEqual('rgb(18, 52, 86)');
+            expect(nanocolor('#123456').format(0.42)).toEqual('rgba(18, 52, 86, 0.42)');
+        });
+
         it('should convert a color to a string', () => {
             expect(nanocolor('#123456').toString()).toEqual('#123456');
             expect(nanocolor('#123456').valueOf()).toEqual('#123456');

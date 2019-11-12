@@ -101,6 +101,14 @@ class Nanocolor {
         return rgb2hex(this.rgb);
     }
 
+    format(opacity = undefined) {
+        const rgb = this.rgb;
+        if (isDefined(opacity)) {
+            return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
+        }
+        return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    }
+
     equals(other) {
         if (typeof other === 'string') {
             other = new Nanocolor(other);
