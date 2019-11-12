@@ -323,7 +323,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }, {
       key: "isDark",
       get: function get() {
-        return this.grayscale()._hsl.l < 40;
+        return this.grayscale()._hsl.l < 50;
       }
     }, {
       key: "isLight",

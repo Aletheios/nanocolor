@@ -1,6 +1,6 @@
 {
     "name": "nanocolor-hsl",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Minimalistic and tiny color manipulation library",
     "keywords": [
         "color",
