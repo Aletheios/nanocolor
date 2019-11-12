@@ -6,6 +6,10 @@ function isValid(hex) {
     return colorRegex.test(hex);
 }
 
+function isDefined(value) {
+    return typeof value !== 'undefined';
+}
+
 function processChannel(channel, sign, factor = 30) {
     factor = Math.max(0, Math.min(100, factor));
     if (factor === 0) {
@@ -21,15 +25,19 @@ function toNanocolor(value) {
 
 
 class Nanocolor {
-    constructor(hexOrInstance = '') {
-        if (hexOrInstance instanceof Nanocolor) {
-            this._hsl = Object.assign({ }, hexOrInstance._hsl);
+    constructor(hexOrInstanceOrR, g, b) {
+        if (hexOrInstanceOrR instanceof Nanocolor) {
+            this._hsl = Object.assign({ }, hexOrInstanceOrR._hsl);
+        }
+        else if (isDefined(hexOrInstanceOrR) && isDefined(g) && isDefined(b)) {
+            const rgb = { r: hexOrInstanceOrR, g, b };
+            this._hsl = rgb2hsl(rgb);
         }
         else {
-            if (!isValid(hexOrInstance)) {
-                hexOrInstance = '#000';
+            if (!isValid(hexOrInstanceOrR)) {
+                hexOrInstanceOrR = '#000';
             }
-            this._hsl = rgb2hsl(hex2rgb(hexOrInstance));
+            this._hsl = rgb2hsl(hex2rgb(hexOrInstanceOrR));
         }
     }
 
@@ -71,22 +79,26 @@ class Nanocolor {
         return this;
     }
 
-    isDark() {
+    get isDark() {
         return this._hsl.l < 50;
     }
 
-    isLight() {
-        return !this.isDark();
+    get isLight() {
+        return !this.isDark;
     }
 
-    getHSL() {
+    get hsl() {
         const hsl = this._hsl;
         return { h: Math.round(hsl.h), s: Math.round(hsl.s), l: Math.round(hsl.l) };
     }
 
-    getRGB() {
+    get rgb() {
         const rgb = hsl2rgb(this._hsl);
         return { r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b) };
+    }
+
+    get hex() {
+        return rgb2hex(this.rgb);
     }
 
     equals(other) {
@@ -105,24 +117,28 @@ class Nanocolor {
             return 0;
         }
         const makeComparable = hsl => hsl.h * 1e6 + hsl.l * 1e3 + hsl.s;
-        return Math.sign(makeComparable(this.getHSL()) - makeComparable(other.getHSL()));
+        return Math.sign(makeComparable(this.hsl) - makeComparable(other.hsl));
     }
 
     clone() {
-        return new Nanocolor(this.toString());
+        return new Nanocolor(this.hex);
     }
 
     toString() {
-        return rgb2hex(this.getRGB());
+        return this.hex;
+    }
+
+    toJSON() {
+        return this.toString();
     }
 
     valueOf() {
-        return this.toString();
+        return this.hex;
     }
 }
 
-function factory(hex) {
-    return new Nanocolor(hex);
+function factory(...args) {
+    return new Nanocolor(...args);
 }
 
 factory.random = function(hue = null){

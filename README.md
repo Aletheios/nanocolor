@@ -34,7 +34,7 @@ Or include the files via `<script>` tag:
 ## Usage
 
 ```javascript
-const color = nanocolor('#ff9900').lighten(50).shift(150).desaturate().toString();
+const color = nanocolor('#ff9900').lighten(50).shift(150).desaturate().hex;
 console.log(color); // -> #93e3ec
 ```
 
@@ -45,12 +45,20 @@ Also check the demo in the `demo` directory.
 
 ### Constructor
 
-The `nanocolor` constructor can be called with hex color strings or other nanocolor instances only:
+The `nanocolor` constructor can be called with hex color strings, RGB values or nanocolor instances:
 * `nanocolor('#112233')` or
 * `nanocolor('#123')` or
+* `nanocolor(17, 34, 51)` or
 * `nanocolor(instance)`
 
-### Instance Methods
+### Instance Fields and Methods
+
+#### Computed Fields
+* `instance.isDark`: Returns a boolean whether or not the color is considered dark.
+* `instance.isLight`: Returns a boolean whether or not the color is considered light.
+* `instance.hex`: Returns a hex color string representing the color, e.g. `#112233`.
+* `instance.hsl`: Returns an object with the color's channels in the HSL space, e.g. `{ h: 100, s: 50, l: 25 }`.
+* `instance.rgb`: Returns an object with the color's channels in the RGB space, e.g. `{ r: 255, g: 100, b: 0 }`.
 
 #### Chainable Methods
 These methods can be chained (i.e. they return the nanocolor instance). For example: `instance.lighten().saturate()`
@@ -63,15 +71,9 @@ These methods can be chained (i.e. they return the nanocolor instance). For exam
 * `instance.shift(amount)`: Shifts the HSL hue of the color by the given amount, e.g. from red to green. Amount is an integer usually in the range -360 <= `amount` <= 360.
 
 #### Other Methods
-* `instance.isDark()`: Returns a boolean whether or not the color is considered dark.
-* `instance.isLight()`: Returns a boolean whether or not the color is considered light.
-* `instance.getHSL()`: Returns an object with the color's channels in the HSL space, e.g. `{ h: 100, s: 50, l: 25 }`.
-* `instance.getRGB()`: Returns an object with the color's channels in the RGB space, e.g. `{ r: 255, g: 100, b: 0 }`.
 * `instance.equals(color)`: Returns a boolean whether or not the color equals the given `color`. `color` can be a hex color string or a `nanocolor` instance.
 * `instance.compare(color)`: Compares the given `color` (hex string or nanocolor instance) to the current `instance`. Returns `0` if the colors are equal, and `-1` or `1` otherwise. Hue is compared first, then lightness, and then saturation. Also see `nanocolor.sort(array)`.
 * `instance.clone()`: Returns a clone of the current `instance`.
-* `instance.toString()`: Returns a hex color string representing the color, e.g. `nanocolor('#112233').toString() // -> '#112233'`.
-* `instance.valueOf()`: Same as `toString()`.
 
 ### Static Methods
 
