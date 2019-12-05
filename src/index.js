@@ -19,6 +19,11 @@ function processChannel(channel, sign, factor = 30) {
     return this;
 }
 
+function toPerceivedGrayscale(rgb) {
+    const gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
+    return rgb2hsl({ r: gray, g: gray, b: gray });
+}
+
 function toNanocolor(value) {
     return value instanceof Nanocolor ? value : new Nanocolor(value); // eslint-disable-line
 }
@@ -43,9 +48,7 @@ class Nanocolor {
 
     grayscale(perceived = true) {
         if (perceived) {
-            const rgb = this.rgb;
-            const gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
-            this._hsl = rgb2hsl({ r: gray, g: gray, b: gray });
+            this._hsl = toPerceivedGrayscale(this.rgb);
         }
         else {
             this._hsl.s = 0;
@@ -99,7 +102,7 @@ class Nanocolor {
     }
 
     get isDark() {
-        return this.grayscale()._hsl.l < 50;
+        return toPerceivedGrayscale(this.rgb).l < 50;
     }
 
     get isLight() {

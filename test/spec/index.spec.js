@@ -8,6 +8,14 @@ describe('nanocolor', () => {
         expect(nanocolor(nanocolor('#112233')).hex).toEqual('#112233');
     });
 
+    it('should not alter colors between getter calls', () => {
+        const color = nanocolor('#ffff00');
+        expect(color.hex).toEqual('#ffff00');
+        expect(color.isLight).toEqual(true);
+        expect(color.isDark).toEqual(false);
+        expect(color.hex).toEqual('#ffff00');
+    });
+
     describe('(chainable methods)', () => {
         it('should convert a color to grayscale', () => {
             expect(nanocolor('#ff9900').grayscale().hex).toEqual('#a6a6a6');
