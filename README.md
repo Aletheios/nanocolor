@@ -2,7 +2,7 @@
 
 **Minimalistic and tiny color manipulation library**
 
-Dependency-free. Only 2.65 KB (minified + gzipped). Internally works with HSL colors. Inspired by various other color libraries.
+Dependency-free. Only 2.8 KB (minified + gzipped). Internally works with HSL colors. Inspired by various other color libraries.
 
 ## Table of Contents
 

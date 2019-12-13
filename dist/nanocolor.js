@@ -126,6 +126,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+  function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -154,6 +160,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     return this;
   }
 
+  function toPerceivedGrayscale(rgb) {
+    var gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
+    return (0, _transforms.rgb2hsl)({
+      r: gray,
+      g: gray,
+      b: gray
+    });
+  }
+
   function toNanocolor(value) {
     return value instanceof Nanocolor ? value : new Nanocolor(value); // eslint-disable-line
   }
@@ -165,7 +180,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       _classCallCheck(this, Nanocolor);
 
       if (hexOrInstanceOrR instanceof Nanocolor) {
-        this._hsl = Object.assign({}, hexOrInstanceOrR._hsl);
+        this._hsl = _objectSpread({}, hexOrInstanceOrR._hsl);
       } else if (isDefined(hexOrInstanceOrR) && isDefined(g) && isDefined(b)) {
         var rgb = {
           r: hexOrInstanceOrR,
@@ -188,13 +203,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var perceived = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
         if (perceived) {
-          var rgb = this.rgb;
-          var gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
-          this._hsl = (0, _transforms.rgb2hsl)({
-            r: gray,
-            g: gray,
-            b: gray
-          });
+          this._hsl = toPerceivedGrayscale(this.rgb);
         } else {
           this._hsl.s = 0;
         }
@@ -298,7 +307,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return hsl.h * 1e6 + hsl.l * 1e3 + hsl.s;
         };
 
-        return Math.sign(makeComparable(this.hsl) - makeComparable(other.hsl));
+        var compared = makeComparable(this.hsl) - makeComparable(other.hsl);
+        return compared === 0 ? 0 : compared < 0 ? -1 : 1; // eslint-disable-line
       }
     }, {
       key: "clone",
@@ -323,7 +333,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }, {
       key: "isDark",
       get: function get() {
-        return this.grayscale()._hsl.l < 50;
+        return toPerceivedGrayscale(this.rgb).l < 50;
       }
     }, {
       key: "isLight",
@@ -562,7 +572,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   function rgb2hex(rgb) {
     var color = Math.floor((rgb.r << 16) + (rgb.g << 8) + rgb.b);
-    return '#' + color.toString(16).padStart(6, '0');
+    return '#' + ('000000' + color.toString(16)).slice(-6);
   }
 });
 

@@ -32,7 +32,7 @@ function toNanocolor(value) {
 class Nanocolor {
     constructor(hexOrInstanceOrR, g, b) {
         if (hexOrInstanceOrR instanceof Nanocolor) {
-            this._hsl = Object.assign({ }, hexOrInstanceOrR._hsl);
+            this._hsl = { ...hexOrInstanceOrR._hsl };
         }
         else if (isDefined(hexOrInstanceOrR) && isDefined(g) && isDefined(b)) {
             const rgb = { r: hexOrInstanceOrR, g, b };
@@ -147,7 +147,8 @@ class Nanocolor {
             return 0;
         }
         const makeComparable = hsl => hsl.h * 1e6 + hsl.l * 1e3 + hsl.s;
-        return Math.sign(makeComparable(this.hsl) - makeComparable(other.hsl));
+        const compared = makeComparable(this.hsl) - makeComparable(other.hsl);
+        return compared === 0 ? 0 : (compared < 0 ? -1 : 1); // eslint-disable-line
     }
 
     clone() {

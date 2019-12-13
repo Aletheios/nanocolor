@@ -73,5 +73,5 @@ export function hex2rgb(hex) {
 
 export function rgb2hex(rgb) {
     const color = Math.floor((rgb.r << 16) + (rgb.g << 8) + rgb.b);
-    return '#' + color.toString(16).padStart(6, '0');
+    return '#' + ('000000' + color.toString(16)).slice(-6);
 }
