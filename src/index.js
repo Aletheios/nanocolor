@@ -1,4 +1,4 @@
-import { rgb2hsl, hsl2rgb, hex2rgb, rgb2hex } from '@/transforms';
+import { rgb2hsl, hsl2rgb, hex2rgb, rgb2hex } from './transforms';
 
 const colorRegex = /^#([A-Fa-f\d]{3}|[A-Fa-f\d]{6})$/;
 

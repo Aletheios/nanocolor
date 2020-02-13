@@ -1,4 +1,4 @@
-import nanocolor from '@/index';
+import nanocolor from '../../src/index';
 
 describe('nanocolor', () => {
 
