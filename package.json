@@ -1,6 +1,6 @@
 {
     "name": "nanocolor-hsl",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Minimalistic and tiny color manipulation library",
     "keywords": [
         "color",
@@ -15,6 +15,7 @@
         "url": "https://github.com/Aletheios/nanocolor"
     },
     "main": "dist/nanocolor.js",
+    "types": "src/types.d.ts",
     "scripts": {
         "build": "webpack --env dev && webpack --env build",
         "dev": "webpack --progress --colors --watch --env dev",
