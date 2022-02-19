@@ -33,3 +33,5 @@ declare class nanocolor {
     static sort(array: (HexOrNanocolor)[]): Nanocolor[];
     static isValid(hex: string): boolean;
 }
+
+export default nanocolor;
