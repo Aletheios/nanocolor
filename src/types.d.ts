@@ -15,7 +15,7 @@ type Nanocolor = {
     desaturate(factor: number): Nanocolor;
     shift(amount: number): Nanocolor;
     mix(otherColor: HexOrNanocolor, opacity?: number): Nanocolor;
-    format(opacity: number): string;
+    format(opacity?: number): string;
     equals(other: HexOrNanocolor): boolean;
     compare(other: HexOrNanocolor): number;
     clone(): Nanocolor;
